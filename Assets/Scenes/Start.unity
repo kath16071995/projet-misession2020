@@ -193,7 +193,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Par Katherine Mantha
+  m_Text: 'By Katherine Mantha
 
     (mank1229958)'
 --- !u!222 &96857370
@@ -416,6 +416,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74ff66620e17050408369bf2bb17de2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _viesText: {fileID: 0}
 --- !u!1 &877915722
 GameObject:
   m_ObjectHideFlags: 0
