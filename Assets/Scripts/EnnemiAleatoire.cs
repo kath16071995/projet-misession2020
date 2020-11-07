@@ -28,13 +28,13 @@ public class EnnemiAleatoire : MonoBehaviour
     }
 
     void Deplacer(){
-        var initPos = _grid.WorldToCell(transform.position);
-        var orientation = OrientationAleatoire();
-        var targetPos = ObtenirTargetPosition(initPos, orientation);
+        Vector3Int initPos = _grid.WorldToCell(transform.position);
+        OrientationHero orientation = OrientationAleatoire();
+        Vector3Int targetPos = ObtenirTargetPosition(initPos, orientation);
 
 
-        var valide = ValiderPosition(initPos, orientation);
-        
+        bool valide = ValiderPosition(initPos, orientation);
+
         _grid.SetTileFlags(targetPos, TileFlags.None);
         _grid.SetColor(targetPos, Color.red);
 
@@ -43,7 +43,7 @@ public class EnnemiAleatoire : MonoBehaviour
     }
 
     OrientationHero OrientationAleatoire(){
-        var numero = Random.Range(0,4);
+        int numero = Random.Range(0,4);
 
         switch (numero)
         {
