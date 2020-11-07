@@ -2608,6 +2608,10 @@ PrefabInstance:
       propertyPath: _mouvementsText
       value: 
       objectReference: {fileID: 614657902}
+    - target: {fileID: 1828219075960811632, guid: c2051f15a246bad42bab00197548b2da, type: 3}
+      propertyPath: _prochaineScene
+      value: Level 2
+      objectReference: {fileID: 0}
     - target: {fileID: 1828219075960811633, guid: c2051f15a246bad42bab00197548b2da, type: 3}
       propertyPath: m_LocalPosition.x
       value: -24.4
@@ -28404,7 +28408,7 @@ GameObject:
   - component: {fileID: 1514245789}
   m_Layer: 0
   m_Name: Portal
-  m_TagString: Untagged
+  m_TagString: Portal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

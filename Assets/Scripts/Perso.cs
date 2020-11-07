@@ -13,6 +13,7 @@ public class Perso : MonoBehaviour
     [SerializeField] int _nbMouvement;
     [SerializeField] ScriptableObject _nbVie;
     [SerializeField] TurnManager _turnManager;
+    [SerializeField] string _prochaineScene;
 
     private Camera _cam;
     private Animator _animation;
@@ -171,6 +172,10 @@ public class Perso : MonoBehaviour
                 //son de collision
                 GameManager.ChangerScene("Level 1");
             }
+        }
+
+        if (collision.gameObject.tag == "Portal"){
+            GameManager.ChangerScene(_prochaineScene);
         }
     }
 
