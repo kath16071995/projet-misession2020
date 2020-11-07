@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class Perso : MonoBehaviour
 {
@@ -25,6 +26,9 @@ public class Perso : MonoBehaviour
     private Vector3Int _destinationPos;
 
     private bool _monTour = false;
+
+    public Text _viesText;
+    public Text _mouvementsText;
     
     void Start()
     {
@@ -38,6 +42,9 @@ public class Perso : MonoBehaviour
 
         _animation = GetComponent<Animator>();
         _animation.SetBool("isRunning", false);
+
+        _viesText.text = "" + Vie.VieRestante;
+        _mouvementsText.text = "" + _nbMouvement;
     }
 
     
@@ -120,6 +127,7 @@ public class Perso : MonoBehaviour
         AssignerCouleurTuile(_targetPos, _originalDestinationColor);
 
         _nbMouvement = _nbMouvement-1;
+        _mouvementsText.text = "" + _nbMouvement;
         _animation.SetBool("isRunning",false);
         yield return null;
     }
@@ -154,8 +162,8 @@ public class Perso : MonoBehaviour
         if (collision.gameObject.tag == "Ennemi1")
         {
             Vie.EnleverVies();
+            _viesText.text = "" + Vie.VieRestante;
             Debug.Log(Vie.VieRestante);
-            //update le UI
             if(Vie.VieRestante<0){
                 //son de mort
                 GameManager.ChangerScene("Start");
