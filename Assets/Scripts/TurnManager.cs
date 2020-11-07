@@ -30,10 +30,10 @@ public class TurnManager : MonoBehaviour
     public void CompleterTour(TourPerso tourCompleter){
         switch(tourCompleter) {
             case TourPerso.Hero:
-                //nextTurnEvent.Invoke(TourPerso.Ennemi);
+                nextTurnEvent.Invoke(TourPerso.Ennemi);
             break;
             case TourPerso.Ennemi:
-                //nextTurnEvent.Invoke(TourPerso.Hero);
+                nextTurnEvent.Invoke(TourPerso.Hero);
             break;
         }
     }
