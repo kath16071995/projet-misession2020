@@ -12,7 +12,6 @@ public class Perso : MonoBehaviour
     [SerializeField] Tilemap _collision;
     [SerializeField] int _nbMouvement;
     [SerializeField] ScriptableObject _nbVie;
-    [SerializeField] TurnManager _turnManager;
     [SerializeField] string _prochaineScene;
 
     private Camera _cam;
