@@ -11,6 +11,7 @@ public class Perso : MonoBehaviour
     [SerializeField] Tilemap _collision;
     [SerializeField] int _nbMouvement;
     [SerializeField] ScriptableObject _nbVie;
+    [SerializeField] string _prochaineScene;
 
     private Camera _cam;
     private Animator _animation;
@@ -105,6 +106,7 @@ public class Perso : MonoBehaviour
         float _distanceRestante = DistanceRestanteCalcul(_destinationPos);
 
         _animation.SetBool("isRunning", true);
+        
 
         while(_distanceRestante > float.Epsilon){
             transform.position = Vector3.MoveTowards(transform.position,_destinationPos, Vitesse);
@@ -163,6 +165,10 @@ public class Perso : MonoBehaviour
                 //son de collision
                 GameManager.ChangerScene("Level 1");
             }
+        }
+
+        if (collision.gameObject.tag == "Portal"){
+            GameManager.ChangerScene(_prochaineScene);
         }
     }
 
