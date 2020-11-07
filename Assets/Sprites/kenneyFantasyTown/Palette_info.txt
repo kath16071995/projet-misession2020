@@ -1,0 +1,4 @@
+Isometric Z as Y
+x: 1, y: 0.5308, z: 1
+
+Source: kenney.nl - https://kenney.nl/assets/fantasy-town-kit
