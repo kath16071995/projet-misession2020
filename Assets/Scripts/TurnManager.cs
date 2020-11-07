@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+[System.Serializable]
 public class NextTurnEvent: UnityEvent<TourPerso>{}
 public class TurnManager : MonoBehaviour
 {
 
-    public UnityEvent nextTurnEvent;
+    public NextTurnEvent nextTurnEvent;
 
     public static TurnManager instance;
 
@@ -17,7 +18,7 @@ public class TurnManager : MonoBehaviour
 
     void Start()
     {
-        //nextTurnEvent.Invoke(TourPerso.Hero);
+        nextTurnEvent.Invoke(TourPerso.Hero);
     }
 
     // Update is called once per frame
@@ -26,7 +27,7 @@ public class TurnManager : MonoBehaviour
         
     }
 
-    void CompleterTour(TourPerso tourCompleter){
+    public void CompleterTour(TourPerso tourCompleter){
         switch(tourCompleter) {
             case TourPerso.Hero:
                 //nextTurnEvent.Invoke(TourPerso.Ennemi);

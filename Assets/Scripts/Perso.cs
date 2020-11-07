@@ -11,6 +11,7 @@ public class Perso : MonoBehaviour
     [SerializeField] Tilemap _collision;
     [SerializeField] int _nbMouvement;
     [SerializeField] ScriptableObject _nbVie;
+    [SerializeField] TurnManager _turnManager;
 
     private Camera _cam;
     private Animator _animation;
@@ -33,7 +34,7 @@ public class Perso : MonoBehaviour
         transform.position = CentrerPositionGrille(transform.position);
 
         Debug.Log(Vie.VieRestante);
-        //TurnManager.instance.nextTurnEvent.AddListener(OnNextTurnEvent);
+        TurnManager.instance.nextTurnEvent.AddListener(OnNextTurnEvent);
 
         _animation = GetComponent<Animator>();
         _animation.SetBool("isRunning", false);
@@ -45,7 +46,7 @@ public class Perso : MonoBehaviour
         Vector2 position =  _cam.ScreenToWorldPoint(Input.mousePosition);
         _mousePos = position;
 
-        if(_nbMouvement != 0){
+        if(_nbMouvement != 0 && this._monTour){
             if(Input.GetMouseButtonUp(0) && _mousePos!=_currentPos){
                 Mouvement();
             } 
@@ -142,7 +143,6 @@ public class Perso : MonoBehaviour
     }
 
     void OnNextTurnEvent(TourPerso tour){
-        Debug.Log("Mon TOur");
         if(tour == TourPerso.Hero){
             _monTour = true;
         }
@@ -164,6 +164,11 @@ public class Perso : MonoBehaviour
                 GameManager.ChangerScene("Level 1");
             }
         }
+    }
+
+    public void TerminerTour(){
+        TurnManager.instance.CompleterTour(TourPerso.Hero);
+        this._monTour = false;
     }
 
 
