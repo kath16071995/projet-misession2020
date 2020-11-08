@@ -20,27 +20,28 @@ public class EnnemiAleatoire : MonoBehaviour
         transform.position = CentrerPositionGrille(transform.position);
     }
 
-    void Update()
-    {
-
-    }
-
+    // sert a verifier si cest sont tour
     void OnNextTurnEvent(TourPerso tour){
         if(tour == TourPerso.Ennemi){
             StartCoroutine("Deplacement");
         }
     }
 
+
+    // coroutine pour le deplacement aletoire
     IEnumerator Deplacement(){
+
+        // verifie si il lui reste des mouvements, si oui il choisi une position aleatoir
         while(_mouvementCourant > 0){
-            List<OrientationHero> orientationValide = OrientationValide();
-            OrientationHero orientation = OrientationAleatoire(orientationValide);
-            Vector3Int targetPos = ObtenirTargetPosition(_grid.WorldToCell(transform.position), orientation);
+            List<OrientationHero> orientationValide = OrientationValide(); // determine les orientations possible
+            OrientationHero orientation = OrientationAleatoire(orientationValide); // choisis un orientation
+            Vector3Int targetPos = ObtenirTargetPosition(_grid.WorldToCell(transform.position), orientation); 
             Vector3 destinationPos = CentrerPositionGrille(_grid.CellToWorld(targetPos));
 
             float vitesse = _vitesse * Time.deltaTime;
             float _distanceRestante = DistanceRestanteCalcul(destinationPos);
 
+            // bouge le personnage
             while(_distanceRestante > float.Epsilon){
                 transform.position = Vector3.MoveTowards(transform.position,destinationPos, vitesse);
                 _distanceRestante = DistanceRestanteCalcul(destinationPos);
@@ -51,9 +52,11 @@ public class EnnemiAleatoire : MonoBehaviour
         }
 
         _mouvementCourant = _nbMouvement;
-        TurnManager.instance.CompleterTour(TourPerso.Ennemi);
+        TurnManager.instance.CompleterTour(TourPerso.Ennemi); //termine le tour ennemi
     }
 
+
+    //verifie les orientations valide pour le deplacement et rajoute dans la liste celle qui sont valide
     List<OrientationHero> OrientationValide(){
         Vector3Int ennemiPos = _grid.WorldToCell(transform.position);
         List<OrientationHero> liste = new List<OrientationHero>();
@@ -74,11 +77,13 @@ public class EnnemiAleatoire : MonoBehaviour
         return liste;
     }
 
+    //choisis un orientation aleatoirement dans la liste possible 
     OrientationHero OrientationAleatoire(List<OrientationHero> orientation){
         int numero = Random.Range(0, orientation.Count);
         return orientation[numero];
     }
 
+    //determine la position de deplacement ennemi selon son orientation
     Vector3Int ObtenirTargetPosition(Vector3Int position, OrientationHero orientation){
         switch (orientation)
         {
@@ -99,6 +104,7 @@ public class EnnemiAleatoire : MonoBehaviour
         }
     }
 
+    //verifie si la tuile est valide
     bool ValiderPosition(Vector3Int position, OrientationHero orientation){
         Vector3Int _targetPosCollision = ObtenirTargetPosition(position, orientation);
         return !_collision.HasTile(_targetPosCollision);
@@ -107,6 +113,7 @@ public class EnnemiAleatoire : MonoBehaviour
     // calcul la distance restante entre deux positions
     float DistanceRestanteCalcul(Vector3 destination){return (transform.position - destination).sqrMagnitude;}
 
+    //centre dans la tuile
     Vector3 CentrerPositionGrille(Vector3 position){
         Vector3Int cellPosition = _grid.WorldToCell(position);
         return _grid.GetCellCenterWorld(cellPosition);
