@@ -13,6 +13,7 @@ public class Perso : MonoBehaviour
     [SerializeField] int _nbMouvement;
     [SerializeField] ScriptableObject _nbVie;
     [SerializeField] string _prochaineScene;
+    [SerializeField] string _sceneCourante;
 
     private Camera _cam;
     private Animator _animation;
@@ -120,10 +121,10 @@ public class Perso : MonoBehaviour
             yield return null;
         }
 
-        yield return new WaitForSeconds (0.5f);
+        yield return null;
         AssignerCouleurTuile(_currentPos, _originalCurrentColor);
 
-        yield return new WaitForSeconds (0.5f);
+        yield return null;
         AssignerCouleurTuile(_targetPos, _originalDestinationColor);
 
         _nbMouvement = _nbMouvement-1;
@@ -165,11 +166,9 @@ public class Perso : MonoBehaviour
             _viesText.text = "" + Vie.VieRestante;
             Debug.Log(Vie.VieRestante);
             if(Vie.VieRestante<0){
-                //son de mort
                 GameManager.ChangerScene("Start");
             }else{
-                //son de collision
-                GameManager.ChangerScene("Level 1");
+                GameManager.ChangerScene(_sceneCourante);
             }
         }
 
