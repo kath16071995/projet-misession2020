@@ -11,9 +11,13 @@ public class EnnemiAleatoire : MonoBehaviour
     [SerializeField] Tilemap _collision;
     [SerializeField] int _nbMouvement;
 
+    private int _mouvementCourant;
+
     void Start()
     {
         TurnManager.instance.nextTurnEvent.AddListener(OnNextTurnEvent);
+        _mouvementCourant = _nbMouvement;
+        transform.position = CentrerPositionGrille(transform.position);
     }
 
     void Update()
@@ -23,45 +27,56 @@ public class EnnemiAleatoire : MonoBehaviour
 
     void OnNextTurnEvent(TourPerso tour){
         if(tour == TourPerso.Ennemi){
-            Deplacer();
+            StartCoroutine("Deplacement");
         }
     }
 
-    void Deplacer(){
-        Vector3Int initPos = _grid.WorldToCell(transform.position);
-        OrientationHero orientation = OrientationAleatoire();
-        Vector3Int targetPos = ObtenirTargetPosition(initPos, orientation);
+    IEnumerator Deplacement(){
+        while(_mouvementCourant > 0){
+            List<OrientationHero> orientationValide = OrientationValide();
+            OrientationHero orientation = OrientationAleatoire(orientationValide);
+            Vector3Int targetPos = ObtenirTargetPosition(_grid.WorldToCell(transform.position), orientation);
+            Vector3 destinationPos = CentrerPositionGrille(_grid.CellToWorld(targetPos));
 
+            float vitesse = _vitesse * Time.deltaTime;
+            float _distanceRestante = DistanceRestanteCalcul(destinationPos);
 
-        bool valide = ValiderPosition(initPos, orientation);
+            while(_distanceRestante > float.Epsilon){
+                transform.position = Vector3.MoveTowards(transform.position,destinationPos, vitesse);
+                _distanceRestante = DistanceRestanteCalcul(destinationPos);
+                yield return null;
+            }
 
-        _grid.SetTileFlags(targetPos, TileFlags.None);
-        _grid.SetColor(targetPos, Color.red);
+            _mouvementCourant = _mouvementCourant - 1;
+        }
 
-        Debug.Log(orientation);
-        Debug.Log(valide);
+        _mouvementCourant = _nbMouvement;
+        TurnManager.instance.CompleterTour(TourPerso.Ennemi);
     }
 
-    OrientationHero OrientationAleatoire(){
-        int numero = Random.Range(0,4);
+    List<OrientationHero> OrientationValide(){
+        Vector3Int ennemiPos = _grid.WorldToCell(transform.position);
+        List<OrientationHero> liste = new List<OrientationHero>();
 
-        switch (numero)
-        {
-            case 0:
-                return OrientationHero.NE;
-            break;
-            case 1:
-                return OrientationHero.NW;
-            break;
-            case 2:
-                return OrientationHero.SE;
-            break;
-            case 3:
-                return OrientationHero.SW;
-            break;
-            default:
-                return OrientationHero.NE;
+        if(ValiderPosition(ennemiPos, OrientationHero.NE)) {
+            liste.Add(OrientationHero.NE);
         }
+        if(ValiderPosition(ennemiPos, OrientationHero.NW)) {
+            liste.Add(OrientationHero.NW);
+        }
+        if(ValiderPosition(ennemiPos, OrientationHero.SE)) {
+            liste.Add(OrientationHero.SE);
+        }
+        if(ValiderPosition(ennemiPos, OrientationHero.SW)) {
+            liste.Add(OrientationHero.SW);
+        }
+
+        return liste;
+    }
+
+    OrientationHero OrientationAleatoire(List<OrientationHero> orientation){
+        int numero = Random.Range(0, orientation.Count);
+        return orientation[numero];
     }
 
     Vector3Int ObtenirTargetPosition(Vector3Int position, OrientationHero orientation){
@@ -85,25 +100,16 @@ public class EnnemiAleatoire : MonoBehaviour
     }
 
     bool ValiderPosition(Vector3Int position, OrientationHero orientation){
-        Vector3Int _targetPosCollision = new Vector3Int(0, 0, 0);
-
-        switch (orientation)
-        {
-            case OrientationHero.N:
-                _targetPosCollision = _grid.WorldToCell(new Vector3(position.x + 1, position.y + 1, 0));
-            break;
-            case OrientationHero.E:
-                _targetPosCollision = _grid.WorldToCell(new Vector3(position.x + 1, position.y - 1, 0));
-            break;
-            case OrientationHero.S:
-                _targetPosCollision = _grid.WorldToCell(new Vector3(position.x - 1, position.y + 1, 0));
-            break;
-            case OrientationHero.W:
-                _targetPosCollision = _grid.WorldToCell(new Vector3(position.x - 1, position.y - 1, 0));
-            break;
-        }
-
+        Vector3Int _targetPosCollision = ObtenirTargetPosition(position, orientation);
         return !_collision.HasTile(_targetPosCollision);
+    }
+
+    // calcul la distance restante entre deux positions
+    float DistanceRestanteCalcul(Vector3 destination){return (transform.position - destination).sqrMagnitude;}
+
+    Vector3 CentrerPositionGrille(Vector3 position){
+        Vector3Int cellPosition = _grid.WorldToCell(position);
+        return _grid.GetCellCenterWorld(cellPosition);
     }
 }
 

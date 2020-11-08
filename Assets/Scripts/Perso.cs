@@ -26,6 +26,7 @@ public class Perso : MonoBehaviour
     private Vector3Int _destinationPos;
 
     private bool _monTour = false;
+    private bool _seDeplace = false;
 
     public Text _viesText;
     public Text _mouvementsText;
@@ -53,7 +54,7 @@ public class Perso : MonoBehaviour
         Vector2 position =  _cam.ScreenToWorldPoint(Input.mousePosition);
         _mousePos = position;
 
-        if(_nbMouvement != 0 && this._monTour){
+        if(_nbMouvement != 0 && _monTour && !_seDeplace){
             if(Input.GetMouseButtonUp(0) && _mousePos!=_currentPos){
                 Mouvement();
             } 
@@ -78,6 +79,8 @@ public class Perso : MonoBehaviour
         // on verifie si on clique sur une cellule de la grid et non une cellule de collision, et ensuit on verifie si elle est sur la meme axe des X ou Y que le hero
         if(!_collision.HasTile(collisionPosition)){
             if(_grid.HasTile(_destinationPos) && (_centerMouse.x==_centerPerso.x || _centerMouse.y == _centerPerso.y)){
+                _seDeplace = true;
+                EnleverMouvement(_initPos, _destinationPos);
                 // on recupere les couleurs initiales des tuiles dans une propriete et on les changent pour deux couleurs préchoisis
                 _originalDestinationColor = _grid.GetColor(_destinationPos);
                 AssignerCouleurTuile(_destinationPos, Color.red);
@@ -120,15 +123,13 @@ public class Perso : MonoBehaviour
             yield return null;
         }
 
-        yield return new WaitForSeconds (0.5f);
+        yield return new WaitForSeconds (0.25f);
         AssignerCouleurTuile(_currentPos, _originalCurrentColor);
-
-        yield return new WaitForSeconds (0.5f);
         AssignerCouleurTuile(_targetPos, _originalDestinationColor);
 
-        _nbMouvement = _nbMouvement-1;
         _mouvementsText.text = "" + _nbMouvement;
         _animation.SetBool("isRunning",false);
+        _seDeplace = false;
         yield return null;
     }
 
@@ -181,6 +182,13 @@ public class Perso : MonoBehaviour
     public void TerminerTour(){
         TurnManager.instance.CompleterTour(TourPerso.Hero);
         this._monTour = false;
+    }
+
+    void EnleverMouvement(Vector3Int posCourant, Vector3Int posDestination){
+        var x = posDestination.x - posCourant.x;
+        var y = posDestination.y - posCourant.y;
+
+        _nbMouvement = _nbMouvement - (Mathf.Abs(x) + Mathf.Abs(y));
     }
 
 
