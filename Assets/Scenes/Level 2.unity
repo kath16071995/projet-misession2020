@@ -9140,6 +9140,10 @@ PrefabInstance:
       propertyPath: _turnManager
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1828219075960811632, guid: c2051f15a246bad42bab00197548b2da, type: 3}
+      propertyPath: _sceneCourante
+      value: Level 2
+      objectReference: {fileID: 0}
     - target: {fileID: 1828219075960811633, guid: c2051f15a246bad42bab00197548b2da, type: 3}
       propertyPath: m_LocalPosition.x
       value: 11
@@ -39587,4 +39591,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74ff66620e17050408369bf2bb17de2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _viesText: {fileID: 0}
